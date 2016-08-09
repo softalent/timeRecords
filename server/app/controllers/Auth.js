@@ -1,9 +1,7 @@
 // Load required packages
 var User = require('../models/user');
-var jwt         = require('jwt-simple');
 var bcrypt =require('bcrypt');
 var config = require('../../config/database.js');
-var passport = require('passport');
 var jwt = require('jsonwebtoken');
 exports.authenticate = function(req,res){
 	User.findOne({

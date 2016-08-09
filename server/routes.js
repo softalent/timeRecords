@@ -3,6 +3,7 @@
 // var config = require('../config/main');  
 var jwt = require('jsonwebtoken');
 module.exports = function(router, passport){
+
 	var timeRecordController = require('./app/controllers/timeRecord');
 	var userController = require('./app/controllers/user');
 	var authController = require('./app/controllers/auth');
@@ -25,16 +26,21 @@ module.exports = function(router, passport){
 
 	router.route('/authenticate')
 	  .post(authController.authenticate);
+
+
+
+
 	router.route('/memberinfo')
-	  .get(userController.memberinfo);
+	  .get(passport.authenticate('jwt', { session: false}),userController.memberinfo);
 	router.route('/login')
 	  .post(userController.login);
 	router.route('/logout')
 	  .get(userController.logout);
 
 	// Create endpoint handlers for /timeRecords
+	console.log(passport.authenticate);
 	router.route('/timeRecords')
-	  .post( passport.authenticate('jwt', { session: false}),timeRecordController.postTimeRecords)
+	  .post(passport.authenticate('jwt', { session: false}),timeRecordController.postTimeRecords)
 	  .get(passport.authenticate('jwt', { session: false}),timeRecordController.getTimeRecords);
 
 	// Create endpoint handlers for /timeRecords/:record_id

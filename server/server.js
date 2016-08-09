@@ -14,17 +14,17 @@ var morgan       = require('morgan');
 var jwt = require('jsonwebtoken');
 var session      = require('express-session');
 
-////db connecting
+
 var config = require('./config/database.js');
 var mongoose   = require('mongoose');
 mongoose.connect(config.database); // connect to our databa
-app.set('superSecret', 'SuperSecret');
+app.set('superSecret', 'wanghai');
 
 app.use(cookieParser()); 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(passport.initialize());
-// Enable CORS from client-side
+app.use(passport.session());
 app.use(function(req, res, next) {  
   res.header("Access-Control-Allow-Origin", "*");
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
@@ -35,19 +35,13 @@ app.use(function(req, res, next) {
 
 
 require('./config/passport')(passport);
-var port = process.env.PORT || 8080;        // set our port
+var port = process.env.PORT || 8080;        
 
-// ROUTES FOR OUR API
-// =============================================================================
-var router = express.Router();              // get an instance of the express Router
+
+var router = express.Router();              
 require('./routes.js')(router, passport);
 app.use('/api', router);
 
 
-
-
-
-// START THE SERVER
-// =============================================================================
 app.listen(port);
 console.log('Magic happens on port ' + port);

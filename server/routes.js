@@ -37,11 +37,13 @@ module.exports = function(router, passport){
 	router.route('/logout')
 	  .get(userController.logout);
 
+
 	// Create endpoint handlers for /timeRecords
+	// passport.authenticate('jwt', { session: false}),
 	console.log(passport.authenticate);
 	router.route('/timeRecords')
-	  .post(passport.authenticate('jwt', { session: false}),timeRecordController.postTimeRecords)
-	  .get(passport.authenticate('jwt', { session: false}),timeRecordController.getTimeRecords);
+	  .post(timeRecordController.postTimeRecords)
+	  .get(timeRecordController.getTimeRecords);
 
 	// Create endpoint handlers for /timeRecords/:record_id
 	router.route('/timeRecords/:record_id')

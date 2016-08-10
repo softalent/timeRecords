@@ -8,9 +8,9 @@ exports.postTimeRecords = function(req, res) {
 
 
   timeRecord.description = req.body.description;
-  timeRecord.atDate = req.body.atDate;
+  timeRecord.atDate = new Date(req.body.atDate);
   timeRecord.workingHours = req.body.workingHours;
-  timeRecord.userId = req.user._id;
+  // timeRecord.userId = req.user._id;
 
 
   timeRecord.save(function(err) {
@@ -24,13 +24,15 @@ exports.postTimeRecords = function(req, res) {
 exports.getTimeRecords = function(req, res) {
   // Use the Beer model to find all beer
 
-  TimeRecord.find({userId:req.user._id},function(err, records) {
+  // TimeRecord.find({userId:req.user._id},function(err, records) {
+  // 
+  TimeRecord.find(function(err, records) {
 
     if (err)
       res.send(err);
 
     res.json(records);
-  });
+  }).sort({'atDate':-1});
 };
 
 

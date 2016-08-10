@@ -3,7 +3,7 @@ var User = require('../models/user');
 var jwt         = require('jwt-simple');
 var config = require('../../config/database.js');
 var passport = require('passport');
-
+var auth = require('./auth.js');
 exports.getUsers = function(req, res) {
   User.find(function(err, users) {
     if (err)
@@ -31,16 +31,17 @@ exports.signupUser = function(req, res){
 };
 
 exports.login = function(req,res,next){
-   var user = new User({
-    name: req.body.name,
-    password: req.body.password
-  });
+  auth.authenticate(req,res);
+  //  var user = new User({
+  //   name: req.body.name,
+  //   password: req.body.password
+  // });
 
-  console.log(user);
-   req.login(user, function(err) {
-    if (err) { return next(err); }
-    return res.json(user);
-  });
+  // console.log(user);
+  //  req.login(user, function(err) {
+  //   if (err) { return next(err); }
+  //   return res.json(user);
+  // });
 };
 exports.logout = function(req,res,next){
   req.logout();

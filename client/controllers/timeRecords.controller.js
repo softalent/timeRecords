@@ -1,38 +1,31 @@
-angular.module('app').controller('TimeRecordsCtrl',['$scope',function($scope){
-  $scope.timeRecords = [
-    {
-      dateAt:'2016-08-08',
-      workingHours:3,
-      description:'working on angular client'
-    },
-    {
-      dateAt:'2016-08-08',
-      workingHours:5,
-      description:'working on angular client'
-    },
-    {
-      dateAt:'2016-08-07',
-      workingHours:3,
-      description:'working on angular client'
-    }
-    ];   
-  // $scope.resetNewRecordForm = function(){
-  //   $scope.record = {
-  //     date:'2016-08-09',
-  //     workingHours:0,
-  //     description:''};
-  // }
 
+angular.module('app').controller('TimeRecordsCtrl',['$scope','TimeRecordsSvc', function($scope,TimeRecordsSvc){
+  
+  $scope.timeRecords = TimeRecordsSvc.getAll().success(function(records){
+    records.forEach(function(record){
+      var temp = new Date(record.atDate);
+      console.log(temp.toISOString());
+      record.atDate = temp.toISOString().slice(0,10);
+    });
+    console.log(records);
+    $scope.timeRecords = records; 
+
+  });
   $scope.addTimeRecord = function(){
     if($scope.record){
-      $scope.timeRecords.unshift({
-        dateAt:$scope.record.date,
-        workingHours:$scope.record.whours,
-        description:$scope.record.desc
-      });
+      var newRecord={};
+      newRecord.atDate = $scope.record.date;
+      newRecord.workingHours = $scope.record.whours;
+      newRecord.description = $scope.record.desc;
+
+      TimeRecordsSvc.create(newRecord).success(function(record){
+        $scope.timeRecords.unshift(newRecord);
+        $scope.record = null;
+      })
+
       
     }
-    $scope.record = null;
+   
   }    
   // $scope.resetNewRecordForm();
 }]);
